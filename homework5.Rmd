@@ -1,0 +1,73 @@
+---
+title: "homework5"
+output: html_document
+---
+
+```{r}
+choco=read.csv("https://ds202-at-isu.github.io/labs/data/choco.csv")
+head(choco)
+library(ggplot2)
+library(dplyr)
+```
+
+Question set 1
+```{r}
+
+#question 1
+
+count(choco, "Rating")
+
+#The overall number of chocolate bars rated are 1852.
+
+#question 2
+
+ggplot(data=choco, aes(x=Review.Date, y=Rating)) +
+  geom_bar(stat="identity")+
+  labs(x="Year")
+
+#initially during 2005 it was low. The trend seems to be that the ratings increased gradually as the years passed by.The ratings peaked in 2015, however, dropped down after that.
+
+```
+
+Question Set 2
+```{r}
+
+#question1
+ggplot(choco, aes(x= Rating)) + geom_histogram(binwidth=0.35,color="black", fill="blue")
+
+#the ratings are fairly unimoda. the maximum number of ratings is 3.75. A significant outlier would be the chocolate with rating 5. Another outlier are the chocolates with ratings between 1.5 to 2.5
+
+#question 2
+ggplot(choco, aes(x= Cocoa.Pct, y=Rating))+
+  geom_bar(stat="identity",color= "green", fill=" green")
+
+#yes, chocolates with 70% cocoa have the highest ratings
+
+#question 3
+
+choco_country=choco[choco$Company.Location %in% c("U.S.A.", "France", "Canada"),]
+ggplot(choco_country,aes(x=Company.Location, y= Rating)) +
+  geom_bar(stat="identity")
+
+#Ratings are the maximum in U.S.A, then in France and the least in China
+```
+
+
+Question set 3
+```{r}
+
+#A question I would like to investigate is how the Percent of cocoa in chocolates vary in the continents Europe, South America and North Year in the years 2015, 2016, 2017.
+
+choco1 = choco[choco$Review.Date %in% c(2015, 2016, 2017),]
+country=unique(choco1$Company.Location)  
+choco1.europe=choco1[choco1$Company.Location %in% c("France","Italy"),]
+choco1.NorthAmerica=choco1[choco1$Company.Location %in% c("U.S.A","Canada"),]
+choco1.SouthAmerica=choco1[choco1$Company.Location %in% c("Brazil","Ecuador"),]
+choco2=rbind(choco1.europe, choco1.NorthAmerica, choco1.SouthAmerica)
+
+choco2 %>% ggplot(aes(x=Cocoa.Pct))+
+  geom_bar(stat="count", fill="purple")
+
+#Conclusion- the comparison transformed ratings of Percent of cocoa in chocolates. and maximum is in 70% cocoa chocolates.
+```
+
